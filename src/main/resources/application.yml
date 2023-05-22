@@ -1,9 +1,9 @@
 spring:
   profiles:
     group:
-      "local": "localDB, devPort, secret"
-      "dev": "devDB, devPort, secret"
-      "prod": "prodDB, prodPort, secret"
+      "local": "localDB, devPort, secret, web-mvc"
+      "dev": "devDB, devPort, secret, web-mvc"
+      "prod": "prodDB, prodPort, secret, web-mvc"
 
 ---
 
@@ -89,3 +89,20 @@ spring:
 secret:
   jwt-secret-key: ${JWT_SECRET_KEY}
   jwt-expired-in: ${JWT_EXPIRED_IN}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "web-mvc"
+
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+  web:
+    resources:
+      add-mappings: false
+
+  messages:
+    basename: errors
