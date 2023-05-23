@@ -1,4 +1,4 @@
-package kuit.server.dto;
+package kuit.server.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

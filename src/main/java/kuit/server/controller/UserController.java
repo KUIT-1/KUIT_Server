@@ -1,9 +1,12 @@
 package kuit.server.controller;
 
+import kuit.server.common.argument_resolver.PreAuthorize;
 import kuit.server.common.exception.UserException;
 import kuit.server.common.response.BaseResponse;
-import kuit.server.dto.PostUserRequest;
-import kuit.server.dto.PostUserResponse;
+import kuit.server.dto.user.PostLoginRequest;
+import kuit.server.dto.user.PostLoginResponse;
+import kuit.server.dto.user.PostUserRequest;
+import kuit.server.dto.user.PostUserResponse;
 import kuit.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +34,17 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             throw new UserException(INVALID_USER_VALUE, getErrorMessages(bindingResult));
         }
-        return new BaseResponse<>(userService.createUser(postUserRequest));
+        return new BaseResponse<>(userService.signUp(postUserRequest));
+    }
+
+    @PostMapping("/login")
+    public BaseResponse<PostLoginResponse> login(@Validated @RequestBody PostLoginRequest postLoginRequest, BindingResult bindingResult,
+                                                 @PreAuthorize long userId) {
+        log.info("[UserController.login] userId={}", userId);
+        if (bindingResult.hasErrors()) {
+            throw new UserException(INVALID_USER_VALUE, getErrorMessages(bindingResult));
+        }
+        return new BaseResponse<>(userService.login(postLoginRequest, userId));
     }
 
 }
