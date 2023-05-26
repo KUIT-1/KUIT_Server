@@ -60,4 +60,14 @@ public class UserController {
         return new BaseResponse<>(null);
     }
 
+    /**
+     * 회원 탈퇴
+     */
+    @PatchMapping("/{userId}/deleted")
+    public BaseResponse<Object> modifyUserStatus_deleted(@PathVariable long userId) {
+        log.info("[UserController.modifyUserStatus_delete]");
+        userService.modifyUserStatus_deleted(userId);
+        return new BaseResponse<>(null);
+    }
+
 }

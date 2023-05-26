@@ -70,6 +70,13 @@ public class UserService {
         }
     }
 
+    public void modifyUserStatus_deleted(long userId) {
+        int affectedRows = userDao.modifyUserStatus_deleted(userId);
+        if (affectedRows != 1) {
+            throw new DatabaseException(DATABASE_ERROR);
+        }
+    }
+
     private void validatePassword(String password, long userId) {
         String encodedPassword = userDao.getPasswordByUserId(userId);
         if (!passwordEncoder.matches(password, encodedPassword)) {
