@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 public class PostUserRequest {
 
-    @Email
+    @Email(message = "email: 이메일 형식이어야 합니다")
     @NotBlank(message = "email: {NotBlank}")
     @Length(max = 50, message = "email: 최대 {max}자리까지 가능합니다")
     private String email;

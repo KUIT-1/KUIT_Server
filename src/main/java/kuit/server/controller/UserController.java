@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static kuit.server.common.response.status.BaseExceptionResponseStatus.INVALID_USER_VALUE;
 import static kuit.server.util.BindingResultUtils.getErrorMessages;
@@ -28,6 +25,9 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * 회원 가입
+     */
     @PostMapping("")
     public BaseResponse<PostUserResponse> signUp(@Validated @RequestBody PostUserRequest postUserRequest, BindingResult bindingResult) {
         log.info("[UserController.signUp]");
@@ -37,6 +37,9 @@ public class UserController {
         return new BaseResponse<>(userService.signUp(postUserRequest));
     }
 
+    /**
+     * 로그인
+     */
     @PostMapping("/login")
     public BaseResponse<PostLoginResponse> login(@Validated @RequestBody PostLoginRequest postLoginRequest, BindingResult bindingResult,
                                                  @PreAuthorize long userId) {
@@ -45,6 +48,16 @@ public class UserController {
             throw new UserException(INVALID_USER_VALUE, getErrorMessages(bindingResult));
         }
         return new BaseResponse<>(userService.login(postLoginRequest, userId));
+    }
+
+    /**
+     * 회원 휴면
+     */
+    @PatchMapping("/{userId}/dormant")
+    public BaseResponse<Object> modifyUserStatus_dormant(@PathVariable long userId) {
+        log.info("[UserController.modifyUserStatus_dormant]");
+        userService.modifyUserStatus_dormant(userId);
+        return new BaseResponse<>(null);
     }
 
 }

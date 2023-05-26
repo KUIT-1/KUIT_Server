@@ -46,6 +46,14 @@ public class UserDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public int modifyUserStatus_dormant(long userId) {
+        String sql = "update user set status=:status where user_id=:user_id";
+        Map<String, Object> param = Map.of(
+                "status", "dormant",
+                "user_id", userId);
+        return jdbcTemplate.update(sql, param);
+    }
+
     public long findUserIdByEmail(String email) {
         String sql = "select user_id from user where email=:email and status='active'";
         Map<String, Object> param = Map.of("email", email);

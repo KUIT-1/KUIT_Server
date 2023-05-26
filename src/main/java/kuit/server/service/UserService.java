@@ -1,5 +1,6 @@
 package kuit.server.service;
 
+import kuit.server.common.exception.DatabaseException;
 import kuit.server.common.exception.UserException;
 import kuit.server.dao.UserDao;
 import kuit.server.dto.user.PostLoginRequest;
@@ -27,11 +28,10 @@ public class UserService {
         log.info("[UserService.createUser]");
 
         // TODO: 1. validation (중복 검사)
-        if (userDao.hasDuplicateEmail(postUserRequest.getEmail())) {
-            throw new UserException(DUPLICATE_EMAIL);
-        }
-        if (userDao.hasDuplicateNickName(postUserRequest.getNickname())) {
-            throw new UserException(DUPLICATE_NICKNAME);
+        validateEmail(postUserRequest.getEmail());
+        String nickname = postUserRequest.getNickname();
+        if (nickname != null) {
+            validateNickname(postUserRequest.getNickname());
         }
 
         // TODO: 2. password 암호화
@@ -63,10 +63,29 @@ public class UserService {
         return new PostLoginResponse(userId, updatedJwt);
     }
 
+    public void modifyUserStatus_dormant(long userId) {
+        int affectedRows = userDao.modifyUserStatus_dormant(userId);
+        if (affectedRows != 1) {
+            throw new DatabaseException(DATABASE_ERROR);
+        }
+    }
+
     private void validatePassword(String password, long userId) {
         String encodedPassword = userDao.getPasswordByUserId(userId);
         if (!passwordEncoder.matches(password, encodedPassword)) {
             throw new UserException(PASSWORD_NO_MATCH);
+        }
+    }
+
+    private void validateEmail(String email) {
+        if (userDao.hasDuplicateEmail(email)) {
+            throw new UserException(DUPLICATE_EMAIL);
+        }
+    }
+
+    private void validateNickname(String nickname) {
+        if (userDao.hasDuplicateNickName(nickname)) {
+            throw new UserException(DUPLICATE_NICKNAME);
         }
     }
 
