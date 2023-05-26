@@ -3,10 +3,7 @@ package kuit.server.controller;
 import kuit.server.common.argument_resolver.PreAuthorize;
 import kuit.server.common.exception.UserException;
 import kuit.server.common.response.BaseResponse;
-import kuit.server.dto.user.PostLoginRequest;
-import kuit.server.dto.user.PostLoginResponse;
-import kuit.server.dto.user.PostUserRequest;
-import kuit.server.dto.user.PostUserResponse;
+import kuit.server.dto.user.*;
 import kuit.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +64,20 @@ public class UserController {
     public BaseResponse<Object> modifyUserStatus_deleted(@PathVariable long userId) {
         log.info("[UserController.modifyUserStatus_delete]");
         userService.modifyUserStatus_deleted(userId);
+        return new BaseResponse<>(null);
+    }
+
+    /**
+     * 닉네임 변경
+     */
+    @PatchMapping("/{userId}/nickname")
+    public BaseResponse<String> modifyNickname(@PathVariable long userId,
+                                               @Validated @RequestBody PatchNicknameRequest patchNicknameRequest, BindingResult bindingResult) {
+        log.info("[UserController.modifyNickname]");
+        if (bindingResult.hasErrors()) {
+            throw new UserException(INVALID_USER_VALUE, getErrorMessages(bindingResult));
+        }
+        userService.modifyNickname(userId, patchNicknameRequest.getNickname());
         return new BaseResponse<>(null);
     }
 
