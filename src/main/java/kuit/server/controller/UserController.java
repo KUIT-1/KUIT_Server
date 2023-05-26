@@ -11,6 +11,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+import static kuit.server.common.response.status.BaseExceptionResponseStatus.INVALID_USER_STATUS;
 import static kuit.server.common.response.status.BaseExceptionResponseStatus.INVALID_USER_VALUE;
 import static kuit.server.util.BindingResultUtils.getErrorMessages;
 
@@ -79,6 +82,21 @@ public class UserController {
         }
         userService.modifyNickname(userId, patchNicknameRequest.getNickname());
         return new BaseResponse<>(null);
+    }
+
+    /**
+     * 회원 목록 조회
+     */
+    @GetMapping("")
+    public BaseResponse<List<GetUserResponse>> getUsers(
+            @RequestParam(required = false, defaultValue = "") String nickname,
+            @RequestParam(required = false, defaultValue = "") String email,
+            @RequestParam(required = false, defaultValue = "active") String status) {
+        log.info("[UserController.getUsers]");
+        if (!status.equals("active") && !status.equals("dormant") && !status.equals("deleted")) {
+            throw new UserException(INVALID_USER_STATUS);
+        }
+        return new BaseResponse<>(userService.getUsers(nickname, email, status));
     }
 
 }

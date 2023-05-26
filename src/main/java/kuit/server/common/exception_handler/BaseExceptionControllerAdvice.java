@@ -58,13 +58,6 @@ public class BaseExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(DataAccessException.class)
-    public BaseErrorResponse handle_DataAccessException(DataAccessException e) {
-        log.error("[handle_DataAccessException]", e);
-        return new BaseErrorResponse(DATABASE_ERROR);
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
     public BaseErrorResponse handle_RuntimeException(Exception e) {
         log.error("[handle_RuntimeException]", e);
