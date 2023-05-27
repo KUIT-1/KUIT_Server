@@ -46,10 +46,6 @@ public class UserService {
         return new PostUserResponse(userId, jwt);
     }
 
-    public long getUserIdByEmail(String email) {
-        return userDao.getUserIdByEmail(email);
-    }
-
     public PostLoginResponse login(PostLoginRequest postLoginRequest, long userId) {
         log.info("[UserService.login]");
 
@@ -93,6 +89,10 @@ public class UserService {
     public List<GetUserResponse> getUsers(String nickname, String email, String status) {
         log.info("[UserService.getUsers]");
         return userDao.getUsers(nickname, email, status);
+    }
+
+    public long getUserIdByEmail(String email) {
+        return userDao.getUserIdByEmail(email);
     }
 
     private void validatePassword(String password, long userId) {
