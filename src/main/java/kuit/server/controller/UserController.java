@@ -1,6 +1,5 @@
 package kuit.server.controller;
 
-import kuit.server.common.argument_resolver.PreAuthorize;
 import kuit.server.common.exception.UserException;
 import kuit.server.common.response.BaseResponse;
 import kuit.server.dto.user.*;
@@ -35,19 +34,6 @@ public class UserController {
             throw new UserException(INVALID_USER_VALUE, getErrorMessages(bindingResult));
         }
         return new BaseResponse<>(userService.signUp(postUserRequest));
-    }
-
-    /**
-     * 로그인
-     */
-    @PostMapping("/login")
-    public BaseResponse<PostLoginResponse> login(@Validated @RequestBody PostLoginRequest postLoginRequest, BindingResult bindingResult,
-                                                 @PreAuthorize long userId) {
-        log.info("[UserController.login] userId={}", userId);
-        if (bindingResult.hasErrors()) {
-            throw new UserException(INVALID_USER_VALUE, getErrorMessages(bindingResult));
-        }
-        return new BaseResponse<>(userService.login(postLoginRequest, userId));
     }
 
     /**
